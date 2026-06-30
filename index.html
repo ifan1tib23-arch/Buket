@@ -453,6 +453,18 @@
                 </svg>
                 Tanya Jawab via WhatsApp
             </a>
+
+            <!-- Admin Portal Link -->
+            <div class="text-center mt-8 mb-12">
+                <p class="text-xs text-stone-400">Khusus internal toko:</p>
+                <a href="admin.html" class="inline-flex items-center gap-1.5 text-xs text-florist-primary hover:text-florist-primary/80 font-bold mt-1.5 underline transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12.228 3.75a3 3 0 11-5.32 0M7 10h1.5M7 14h1.5m-1.5 4h1.5m3.5-8h5.5M12 14h5.5m-5.5 4h5.5" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 21h6a2 2 0 002-2V7a2 2 0 00-2-2H9a2 2 0 00-2-2H7a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Masuk Portal Admin Toko
+                </a>
+            </div>
         </section>
 
 
@@ -614,12 +626,12 @@
 
     <!-- Main Dynamic Script -->
     <script>
-        // Core Products Dataset containing real-time mock listings (Indonesian localized)
-        const products = [
+        // Core Products Dataset with localStorage synchronization
+        const defaultProducts = [
             {
                 id: 1,
                 name: "Buket Tulip Pastel Blossom",
-                category: "All Varian Bouquet",
+                category: "Handmade Kawat Bulu",
                 price: 175000,
                 desc: "Rangkaian indah bunga tulip segar grade premium yang dipadukan dengan wrapping kertas krep import bergradasi pink pastel lembut. Sangat cocok sebagai ungkapan kasih sayang, hadiah wisuda, maupun anniversary pernikahan.",
                 image: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=600&q=80",
@@ -628,7 +640,7 @@
             {
                 id: 2,
                 name: "Classic Rose Luxury Bouquet",
-                category: "All Varian Bouquet",
+                category: "Handmade Kawat Bulu",
                 price: 250000,
                 desc: "Buket bunga mawar merah merah segar pilihan berkualitas tinggi yang dirangkai rapi dengan sentuhan wrapping premium matte hitam mewah dan pita emas eksklusif. Menghadirkan kesan romantisme abadi yang mendalam.",
                 image: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=600&q=80",
@@ -689,6 +701,12 @@
                 featured: true
             }
         ];
+
+        // Sync or retrieve products
+        if (!localStorage.getItem('florist_products')) {
+            localStorage.setItem('florist_products', JSON.stringify(defaultProducts));
+        }
+        let products = JSON.parse(localStorage.getItem('florist_products'));
 
         // Global State Configuration
         let currentTab = 'home';
@@ -1143,6 +1161,29 @@ Saya ingin memesan buket premium berikut ini:
 "${greeting || 'Tidak menggunakan kartu ucapan'}"
 
 Apakah pesanan ini dapat diproses hari ini? Terima kasih!`;
+
+            // Save order record to localStorage for Admin synchronization
+            try {
+                const orders = JSON.parse(localStorage.getItem('florist_orders') || '[]');
+                const newOrder = {
+                    id: 'ORD-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+                    customerName: name,
+                    customerPhone: phone,
+                    deliveryDate: date,
+                    wrapColor: wrap,
+                    greetingCard: greeting || 'Tidak menggunakan kartu ucapan',
+                    productName: activeProduct.name,
+                    productCategory: activeProduct.category,
+                    productPrice: activeProduct.price,
+                    productImage: activeProduct.image,
+                    timestamp: new Date().toISOString(),
+                    status: 'Menunggu Konfirmasi'
+                };
+                orders.unshift(newOrder);
+                localStorage.setItem('florist_orders', JSON.stringify(orders));
+            } catch (err) {
+                console.error("Gagal menyimpan riwayat pesanan:", err);
+            }
 
             // 3. Admin WhatsApp Link generation and redirection
             const adminPhone = "6282216168815"; // Owner admin WA

@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buket Florist - Portal Admin Premium</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    colors: {
+                        florist: {
+                            primary: '#C87A80',
+                            accent: '#D4A373',
+                            dark: '#2E2528',
+                            light: '#8C7D80',
+                            bg: '#FAF8F5',
+                            card: '#FFFDFB'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .btn-interactive {
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+        }
+        .btn-interactive:active {
+            transform: scale(0.95);
+        }
+        .glass-panel {
+            background: rgba(255, 253, 251, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-florist-bg text-florist-dark font-sans min-h-screen selection:bg-florist-primary/20 selection:text-florist-primary">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-florist-primary/10 shadow-sm py-4 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="h-10 w-10 bg-florist-primary/10 text-florist-primary flex items-center justify-center rounded-full text-xl font-serif">
+                    🌸
+                </div>
+                <div>
+                    <h1 class="font-serif text-lg md:text-xl font-bold tracking-tight text-florist-dark">Buket Florist</h1>
+                    <p class="text-[10px] text-florist-light font-bold uppercase tracking-widest">Portal Admin Internal</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="hidden md:inline-flex items-center gap-1.5 bg-green-50 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-green-200">
+                    <span class="h-2 w-2 bg-green-500 rounded-full animate-pulse"></span>
+                    Sistem Sinkron Terhubung
+                </span>
+                <a href="index.html" class="btn-interactive inline-flex items-center gap-1 bg-florist-primary text-white text-xs font-bold px-4 py-2 rounded-xl shadow-sm hover:bg-florist-primary/90 transition-colors">
+                    Lihat Toko
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="max-w-7xl mx-auto px-4 py-6 md:py-8 md:px-8 pb-24">
+        
+        <!-- INTRO & REAL-TIME STATS SUMMARY -->
+        <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h2 class="font-serif text-2xl md:text-3xl font-bold">Ringkasan Kinerja Toko</h2>
+                <p class="text-xs md:text-sm text-florist-light mt-0.5">Kelola pesanan pelanggan dan perbarui katalog produk Anda secara langsung.</p>
+            </div>
+            <!-- Date indicator -->
+            <div class="bg-white border border-florist-primary/10 rounded-xl px-4 py-2.5 shadow-sm text-xs font-medium text-florist-light flex items-center gap-2">
+                📅 <span id="current-date-span">30 Juni 2026</span>
+            </div>
+        </div>
+
+        <!-- DASHBOARD STATS CARD GRID -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <!-- Stat 1: Total Omset -->
+            <div class="bg-white border border-florist-primary/10 p-4 md:p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                <div>
+                    <span class="text-xl md:text-2xl mb-1 block">💰</span>
+                    <span class="text-xs font-bold text-florist-light uppercase tracking-wider block">Total Pendapatan</span>
+                </div>
+                <h3 id="stat-revenue" class="text-lg md:text-xl font-bold text-florist-dark mt-2">Rp 0</h3>
+                <p class="text-[10px] text-green-600 font-semibold mt-1">Dari pesanan disetujui</p>
+            </div>
+
+            <!-- Stat 2: Total Pesanan -->
+            <div class="bg-white border border-florist-primary/10 p-4 md:p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                <div>
+                    <span class="text-xl md:text-2xl mb-1 block">📦</span>
+                    <span class="text-xs font-bold text-florist-light uppercase tracking-wider block">Total Pesanan</span>
+                </div>
+                <h3 id="stat-orders" class="text-lg md:text-xl font-bold text-florist-dark mt-2">0</h3>
+                <p id="stat-orders-pending" class="text-[10px] text-orange-600 font-semibold mt-1">0 Menunggu Konfirmasi</p>
+            </div>
+
+            <!-- Stat 3: Konfirmasi Pending -->
+            <div class="bg-white border border-florist-primary/10 p-4 md:p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                <div>
+                    <span class="text-xl md:text-2xl mb-1 block">⏳</span>
+                    <span class="text-xs font-bold text-florist-light uppercase tracking-wider block">Konfirmasi Pending</span>
+                </div>
+                <h3 id="stat-pending" class="text-lg md:text-xl font-bold text-florist-dark mt-2">0</h3>
+                <p class="text-[10px] text-florist-light font-semibold mt-1">Harus segera direspon</p>
+            </div>
+
+            <!-- Stat 4: Produk Aktif -->
+            <div class="bg-white border border-florist-primary/10 p-4 md:p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+                <div>
+                    <span class="text-xl md:text-2xl mb-1 block">🌸</span>
+                    <span class="text-xs font-bold text-florist-light uppercase tracking-wider block">Produk Terpajang</span>
+                </div>
+                <h3 id="stat-products" class="text-lg md:text-xl font-bold text-florist-dark mt-2">0 Varian</h3>
+                <p class="text-[10px] text-florist-primary font-semibold mt-1">Tersinkron dengan katalog</p>
+            </div>
+        </div>
+
+        <!-- MAIN ADMIN TABS NAV -->
+        <div class="border-b border-florist-primary/10 mb-6 flex overflow-x-auto no-scrollbar gap-2">
+            <button onclick="switchAdminTab('orders')" id="tab-btn-orders" class="border-b-2 border-florist-primary px-5 py-3 text-sm font-bold text-florist-primary transition-all whitespace-nowrap flex items-center gap-2">
+                📥 Pesanan Masuk
+                <span id="orders-badge-count" class="bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+            </button>
+            <button onclick="switchAdminTab('products')" id="tab-btn-products" class="border-b-2 border-transparent px-5 py-3 text-sm font-semibold text-florist-light hover:text-florist-primary transition-all whitespace-nowrap flex items-center gap-2">
+                🌸 Kelola Katalog Produk
+            </button>
+            <button onclick="switchAdminTab('analytics')" id="tab-btn-analytics" class="border-b-2 border-transparent px-5 py-3 text-sm font-semibold text-florist-light hover:text-florist-primary transition-all whitespace-nowrap flex items-center gap-2">
+                📊 Analisis Penjualan
+            </button>
+        </div>
+
+
+        <!-- ================= SECTION 1: ORDERS TAB ================= -->
+        <section id="section-orders" class="admin-section space-y-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white p-4 border border-florist-primary/10 rounded-2xl shadow-sm">
+                <div>
+                    <h3 class="font-serif text-lg font-bold">Daftar Pemesanan WhatsApp</h3>
+                    <p class="text-xs text-florist-light">Ubah status pesanan untuk melacak transaksi omset real-time.</p>
+                </div>
+                <button onclick="clearAllOrders()" class="btn-interactive border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold px-3 py-2 rounded-xl transition-colors">
+                    🗑️ Reset Riwayat Pesanan
+                </button>
+            </div>
+
+            <!-- Orders Container -->
+            <div id="orders-list-container" class="space-y-4">
+                <!-- Dynamic injected orders cards -->
+            </div>
+        </section>
+
+
+        <!-- ================= SECTION 2: PRODUCTS TAB ================= -->
+        <section id="section-products" class="admin-section hidden space-y-4">
+            <div class="flex justify-between items-center bg-white p-4 border border-florist-primary/10 rounded-2xl shadow-sm">
+                <div>
+                    <h3 class="font-serif text-lg font-bold">Koleksi Produk Aktif</h3>
+                    <p class="text-xs text-florist-light">Tambah, edit, atau hapus item katalog dari halaman depan pembeli.</p>
+                </div>
+                <button onclick="openProductModal()" class="btn-interactive inline-flex items-center gap-1.5 bg-florist-primary hover:bg-florist-primary/95 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition-colors">
+                    ➕ Tambah Produk Baru
+                </button>
+            </div>
+
+            <!-- Product Admin Table -->
+            <div class="bg-white border border-florist-primary/10 rounded-2xl overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-stone-50 border-b border-florist-primary/5 text-[11px] font-bold text-florist-light uppercase tracking-wider">
+                                <th class="p-4">Produk</th>
+                                <th class="p-4">Kategori</th>
+                                <th class="p-4">Harga</th>
+                                <th class="p-4">Rekomendasi Utama</th>
+                                <th class="p-4 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-product-table-body" class="divide-y divide-florist-primary/5 text-xs">
+                            <!-- Dynamic rows loaded from localStorage -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= SECTION 3: ANALYTICS TAB ================= -->
+        <section id="section-analytics" class="admin-section hidden space-y-6">
+            <div class="bg-white p-4 border border-florist-primary/10 rounded-2xl shadow-sm">
+                <h3 class="font-serif text-lg font-bold">Laporan Kinerja & Distribusi Kategori</h3>
+                <p class="text-xs text-florist-light">Grafik sebaran penjualan berdasarkan kategori pesanan pelanggan.</p>
+            </div>
+
+            <!-- Interactive visual charts grid -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Chart 1: Category share -->
+                <div class="bg-white border border-florist-primary/10 rounded-2xl p-6 shadow-sm flex flex-col">
+                    <h4 class="font-serif text-sm font-bold mb-4">Porsi Kategori Terpopuler</h4>
+                    <div class="flex items-center justify-center py-6">
+                        <!-- Custom CSS/SVG beautiful Pie Ring Chart -->
+                        <div class="relative h-44 w-44 flex items-center justify-center">
+                            <svg class="h-full w-full transform -rotate-90" viewBox="0 0 36 36">
+                                <circle cx="18" cy="18" r="15.915" fill="none" stroke="#FAF8F5" stroke-width="3"></circle>
+                                <circle id="circle-cat-1" cx="18" cy="18" r="15.915" fill="none" stroke="#C87A80" stroke-width="3" stroke-dasharray="40 100" stroke-dashoffset="0"></circle>
+                                <circle id="circle-cat-2" cx="18" cy="18" r="15.915" fill="none" stroke="#D4A373" stroke-width="3" stroke-dasharray="25 100" stroke-dashoffset="-40"></circle>
+                                <circle id="circle-cat-3" cx="18" cy="18" r="15.915" fill="none" stroke="#2E2528" stroke-width="3" stroke-dasharray="20 100" stroke-dashoffset="-65"></circle>
+                                <circle id="circle-cat-4" cx="18" cy="18" r="15.915" fill="none" stroke="#8C7D80" stroke-width="3" stroke-dasharray="15 100" stroke-dashoffset="-85"></circle>
+                            </svg>
+                            <div class="absolute text-center">
+                                <span class="text-xl">📊</span>
+                                <span class="text-[10px] font-bold text-florist-light block uppercase tracking-widest mt-1">Sebaran</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Legend -->
+                    <div class="grid grid-cols-2 gap-2 text-xs mt-4 pt-4 border-t border-florist-primary/5" id="chart-legend-container">
+                        <!-- Injected dynamic legends with counts -->
+                    </div>
+                </div>
+
+                <!-- Chart 2: Recent Activity Timeline -->
+                <div class="bg-white border border-florist-primary/10 rounded-2xl p-6 shadow-sm">
+                    <h4 class="font-serif text-sm font-bold mb-4">Aktivitas Terkini & Log Transaksi</h4>
+                    <div id="analytics-activity-logs" class="space-y-4 max-h-72 overflow-y-auto pr-1">
+                        <!-- activity entries -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-notif" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-[-100px] transition-all duration-500 ease-out">
+        <div class="bg-florist-dark text-white text-xs font-bold px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2 border border-white/10">
+            <span class="text-florist-accent">🌸</span>
+            <span id="toast-message">Notifikasi Berhasil</span>
+        </div>
+    </div>
+
+    <!-- ================= ADD / EDIT PRODUCT DIALOG MODAL ================= -->
+    <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-florist-primary/10 transform scale-95 transition-all duration-300 max-h-[90vh] flex flex-col">
+            <!-- Modal Header -->
+            <div class="p-5 border-b border-florist-primary/10 flex items-center justify-between bg-stone-50">
+                <h3 id="modal-title" class="font-serif text-lg font-bold">Tambah Produk Buket</h3>
+                <button onclick="closeProductModal()" class="text-florist-light hover:text-florist-primary p-1 rounded-full hover:bg-stone-100 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Form Scroll Area -->
+            <div class="p-6 overflow-y-auto flex-1 space-y-4">
+                <form id="product-form" onsubmit="saveProduct(event)">
+                    <input type="hidden" id="edit-product-id">
+
+                    <!-- Product Name -->
+                    <div>
+                        <label class="block text-xs font-bold text-florist-light uppercase mb-1.5">Nama Buket *</label>
+                        <input type="text" id="modal-name" required placeholder="Contoh: Buket Valentine Red Love" class="w-full bg-stone-50 border border-florist-primary/15 focus:border-florist-primary focus:ring-1 focus:ring-florist-primary rounded-xl px-4 py-3 text-xs text-florist-dark outline-none transition-all">
+                    </div>
+
+                    <!-- Category Dropdown -->
+                    <div>
+                        <label class="block text-xs font-bold text-florist-light uppercase mb-1.5">Kategori Produk *</label>
+                        <select id="modal-category" required class="w-full bg-stone-50 border border-florist-primary/15 focus:border-florist-primary focus:ring-1 focus:ring-florist-primary rounded-xl px-4 py-3 text-xs text-florist-dark outline-none transition-all">
+                            <option value="Handmade Kawat Bulu">🧸 Handmade Kawat Bulu</option>
+                            <option value="Snack & Money Tower">🗼 Snack & Money Tower</option>
+                            <option value="Hampers Premium">🎁 Hampers Premium</option>
+                            <option value="Hantaran Seserahan">💍 Hantaran Seserahan</option>
+                            <option value="Kalung Uang">💸 Kalung Uang</option>
+                        </select>
+                    </div>
+
+                    <!-- Price -->
+                    <div>
+                        <label class="block text-xs font-bold text-florist-light uppercase mb-1.5">Harga Rupiah (Angka Saja) *</label>
+                        <input type="number" id="modal-price" required placeholder="Contoh: 150000" class="w-full bg-stone-50 border border-florist-primary/15 focus:border-florist-primary focus:ring-1 focus:ring-florist-primary rounded-xl px-4 py-3 text-xs text-florist-dark outline-none transition-all">
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label class="block text-xs font-bold text-florist-light uppercase mb-1.5">Deskripsi Produk *</label>
+                        <textarea id="modal-desc" required rows="3" placeholder="Tuliskan kelengkapan bahan kertas wrapping, kesegaran bunga, dsb..." class="w-full bg-stone-50 border border-florist-primary/15 focus:border-florist-primary focus:ring-1 focus:ring-florist-primary rounded-xl px-4 py-3 text-xs text-florist-dark outline-none transition-all resize-none"></textarea>
+                    </div>
+
+                    <!-- Image URL -->
+                    <div>
+                        <label class="block text-xs font-bold text-florist-light uppercase mb-1.5">Tautan / Link Gambar (URL) *</label>
+                        <input type="url" id="modal-image" required placeholder="https://images.unsplash.com/..." class="w-full bg-stone-50 border border-florist-primary/15 focus:border-florist-primary focus:ring-1 focus:ring-florist-primary rounded-xl px-4 py-3 text-xs text-florist-dark outline-none transition-all">
+                    </div>
+
+                    <!-- Preset Images helper picker -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-florist-primary uppercase tracking-wider mb-2">Preset Gambar Estetik Pilihan (Klik untuk Memilih):</label>
+                        <div class="grid grid-cols-4 gap-2">
+                            <img onclick="pickPresetImg('https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=600&q=80')" src="https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=150&q=80" class="h-12 w-full object-cover rounded-xl cursor-pointer border-2 border-transparent hover:border-florist-primary transition-all">
+                            <img onclick="pickPresetImg('https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=600&q=80')" src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=150&q=80" class="h-12 w-full object-cover rounded-xl cursor-pointer border-2 border-transparent hover:border-florist-primary transition-all">
+                            <img onclick="pickPresetImg('https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80')" src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=150&q=80" class="h-12 w-full object-cover rounded-xl cursor-pointer border-2 border-transparent hover:border-florist-primary transition-all">
+                            <img onclick="pickPresetImg('https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80')" src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=150&q=80" class="h-12 w-full object-cover rounded-xl cursor-pointer border-2 border-transparent hover:border-florist-primary transition-all">
+                        </div>
+                    </div>
+
+                    <!-- Highlighted check -->
+                    <div class="flex items-center gap-2 mt-4 pt-2 border-t border-florist-primary/5">
+                        <input type="checkbox" id="modal-featured" class="h-4 w-4 rounded border-florist-primary/30 text-florist-primary focus:ring-florist-primary">
+                        <label for="modal-featured" class="text-xs font-semibold text-florist-dark">Rekomendasikan di Halaman Utama (Featured)</label>
+                    </div>
+
+                    <div class="flex gap-3 mt-6">
+                        <button type="button" onclick="closeProductModal()" class="btn-interactive w-1/2 py-3.5 bg-stone-100 hover:bg-stone-200 text-florist-dark font-bold text-xs rounded-xl transition-all">Batal</button>
+                        <button type="submit" class="btn-interactive w-1/2 py-3.5 bg-florist-primary hover:bg-florist-primary/95 text-white font-bold text-xs rounded-xl shadow-md transition-all">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Synchronized states from LocalStorage
+        let products = JSON.parse(localStorage.getItem('florist_products') || '[]');
+        let orders = JSON.parse(localStorage.getItem('florist_orders') || '[]');
+        let currentAdminTab = 'orders';
+
+        // Initialize Admin Dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set current indonesian localized date
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date-span').innerText = new Date().toLocaleDateString('id-ID', options);
+
+            // Fetch dynamic records
+            refreshAdminStats();
+            renderAdminOrders();
+            renderAdminProducts();
+            renderAnalytics();
+        });
+
+        // Tab selection logic
+        function switchAdminTab(tabName) {
+            currentAdminTab = tabName;
+
+            // Update section visible status
+            document.querySelectorAll('.admin-section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            document.getElementById(`section-${tabName}`).classList.remove('hidden');
+
+            // Reset navigation menu highlighted indicator
+            ['orders', 'products', 'analytics'].forEach(tab => {
+                const button = document.getElementById(`tab-btn-${tab}`);
+                if (!button) return;
+                
+                if (tab === tabName) {
+                    button.classList.add('border-florist-primary', 'text-florist-primary');
+                    button.classList.remove('border-transparent', 'text-florist-light');
+                } else {
+                    button.classList.remove('border-florist-primary', 'text-florist-primary');
+                    button.classList.add('border-transparent', 'text-florist-light');
+                }
+            });
+
+            // Re-render specifics
+            if (tabName === 'orders') renderAdminOrders();
+            if (tabName === 'products') renderAdminProducts();
+            if (tabName === 'analytics') renderAnalytics();
+        }
+
+        // Compute and refresh stats card
+        function refreshAdminStats() {
+            // Re-read datasets
+            products = JSON.parse(localStorage.getItem('florist_products') || '[]');
+            orders = JSON.parse(localStorage.getItem('florist_orders') || '[]');
+
+            // Revenue: Sum of completed orders or disetujui
+            const completedOrders = orders.filter(o => o.status === 'Selesai' || o.status === 'Diterima');
+            const revenueSum = completedOrders.reduce((sum, ord) => sum + ord.productPrice, 0);
+            
+            // Format to Rupiah
+            document.getElementById('stat-revenue').innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(revenueSum);
+
+            // Total orders count
+            document.getElementById('stat-orders').innerText = `${orders.length} Transaksi`;
+
+            // Waitings pending count
+            const pendingOrders = orders.filter(o => o.status === 'Menunggu Konfirmasi' || o.status === 'Pending' || !o.status);
+            document.getElementById('stat-orders-pending').innerText = `${pendingOrders.length} Menunggu Konfirmasi`;
+            document.getElementById('stat-pending').innerText = `${pendingOrders.length} Pesanan`;
+
+            // Active products count
+            document.getElementById('stat-products').innerText = `${products.length} Varian`;
+
+            // Tab badge
+            const badge = document.getElementById('orders-badge-count');
+            if (pendingOrders.length > 0) {
+                badge.innerText = pendingOrders.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // ================= SECTION 1: RENDER ORDERS =================
+        function renderAdminOrders() {
+            orders = JSON.parse(localStorage.getItem('florist_orders') || '[]');
+            const container = document.getElementById('orders-list-container');
+            
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white border border-florist-primary/10 rounded-3xl p-10 text-center shadow-sm">
+                        <span class="text-5xl block mb-3">📦</span>
+                        <h4 class="font-serif text-lg font-bold">Belum Ada Pesanan Masuk</h4>
+                        <p class="text-xs text-florist-light mt-1 max-w-xs mx-auto">Ketika pelanggan melakukan submit formulir checkout WhatsApp di situs toko, pesan otomatis tersimpan di sini.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = orders.map(ord => {
+                const formattedPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(ord.productPrice);
+                
+                // Set Status Badges Color Style
+                let statusClass = 'bg-stone-100 text-stone-600 border-stone-200';
+                if (ord.status === 'Menunggu Konfirmasi') {
+                    statusClass = 'bg-orange-50 text-orange-600 border-orange-200';
+                } else if (ord.status === 'Selesai') {
+                    statusClass = 'bg-green-50 text-green-600 border-green-200';
+                } else if (ord.status === 'Batal') {
+                    statusClass = 'bg-red-50 text-red-600 border-red-200';
+                }
+
+                const waMessage = `Halo ${ord.customerName} 🌸,\n\nTerima kasih telah memesan di Buket Florist.\nKami mengonfirmasi pesanan Anda:\n💐 Buket: ${ord.productName}\n🚚 Pengiriman: ${formatDateIndo(ord.deliveryDate)}\n\nApakah detail ini sudah benar? Pesanan Anda sedang kami siapkan! ✨`;
+                const waUrl = `https://wa.me/${ord.customerPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(waMessage)}`;
+
+                return `
+                    <div class="bg-white border border-florist-primary/10 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <!-- Upper Area -->
+                        <div class="p-4 md:p-5 flex flex-col md:flex-row justify-between gap-4 border-b border-florist-primary/5">
+                            <div class="flex gap-4">
+                                <img src="${ord.productImage}" alt="${ord.productName}" class="h-16 w-16 md:h-20 md:w-20 object-cover rounded-xl border border-florist-primary/5 flex-shrink-0">
+                                <div>
+                                    <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                        <span class="text-[10px] font-bold text-florist-light font-mono uppercase tracking-tight">${ord.id}</span>
+                                        <span class="text-[10px] border px-2 py-0.5 rounded-full font-bold uppercase ${statusClass}">${ord.status || 'Menunggu'}</span>
+                                    </div>
+                                    <h4 class="font-serif text-sm md:text-base font-bold text-florist-dark leading-snug">${ord.productName}</h4>
+                                    <p class="text-xs text-florist-primary font-bold mt-1">${formattedPrice}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Buyer Information -->
+                            <div class="bg-stone-50 rounded-xl p-3 text-xs space-y-1.5 min-w-[220px] border border-stone-100">
+                                <div class="flex justify-between"><span class="text-florist-light font-medium">Pemesan:</span> <span class="font-bold">${ord.customerName}</span></div>
+                                <div class="flex justify-between"><span class="text-florist-light font-medium">WhatsApp:</span> <span class="font-bold">${ord.customerPhone}</span></div>
+                                <div class="flex justify-between"><span class="text-florist-light font-medium">Kirim Tanggal:</span> <span class="font-bold text-florist-primary">${formatDateIndo(ord.deliveryDate)}</span></div>
+                                <div class="flex justify-between"><span class="text-florist-light font-medium">Kertas Wrap:</span> <span class="font-semibold text-stone-600">${ord.wrapColor || '-'}</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Card Middle: Custom Card Note -->
+                        <div class="p-4 bg-stone-50/50 text-xs border-b border-florist-primary/5 flex items-start gap-2">
+                            <span class="text-base select-none">✉️</span>
+                            <div>
+                                <span class="text-florist-light font-bold uppercase tracking-wider text-[9px] block mb-0.5">Isi Kartu Ucapan:</span>
+                                <p class="text-florist-dark font-medium italic">"${ord.greetingCard}"</p>
+                            </div>
+                        </div>
+
+                        <!-- Actions Lower Area -->
+                        <div class="p-3 md:px-5 bg-stone-50 flex flex-wrap gap-2 items-center justify-between">
+                            <span class="text-[10px] text-florist-light font-medium">Dipesan pada: ${new Date(ord.timestamp).toLocaleString('id-ID')}</span>
+                            
+                            <div class="flex gap-2">
+                                <!-- Contact Button -->
+                                <a href="${waUrl}" target="_blank" class="btn-interactive border border-green-300 hover:bg-green-100 text-green-700 text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1">
+                                    💬 Hubungi WA
+                                </a>
+
+                                <!-- Action dropdown / buttons -->
+                                ${ord.status !== 'Selesai' && ord.status !== 'Batal' ? `
+                                    <button onclick="setOrderStatus('${ord.id}', 'Selesai')" class="btn-interactive bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-3 py-2 rounded-xl">
+                                        ✓ Selesai
+                                    </button>
+                                    <button onclick="setOrderStatus('${ord.id}', 'Batal')" class="btn-interactive bg-red-50 text-red-600 hover:bg-red-100 text-xs font-bold px-3 py-2 rounded-xl">
+                                        ✗ Batal
+                                    </button>
+                                ` : `
+                                    <button onclick="deleteSingleOrder('${ord.id}')" class="btn-interactive hover:bg-stone-200 text-stone-500 text-xs font-bold p-2 rounded-xl" title="Hapus dari log">
+                                        🗑️
+                                    </button>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Order control actions
+        function setOrderStatus(orderId, newStatus) {
+            orders = JSON.parse(localStorage.getItem('florist_orders') || '[]');
+            const idx = orders.findIndex(o => o.id === orderId);
+            if (idx > -1) {
+                orders[idx].status = newStatus;
+                localStorage.setItem('florist_orders', JSON.stringify(orders));
+                showToast(`Status pesanan ${orderId} diubah ke ${newStatus}`);
+                refreshAdminStats();
+                renderAdminOrders();
+            }
+        }
+
+        function deleteSingleOrder(orderId) {
+            orders = JSON.parse(localStorage.getItem('florist_orders') || '[]');
+            orders = orders.filter(o => o.id !== orderId);
+            localStorage.setItem('florist_orders', JSON.stringify(orders));
+            showToast("Pesanan dihapus dari log internal");
+            refreshAdminStats();
+            renderAdminOrders();
+        }
+
+        function clearAllOrders() {
+            if (confirm("Apakah Anda yakin ingin menghapus semua riwayat transaksi pesanan? Tindakan ini permanen.")) {
+                localStorage.setItem('florist_orders', JSON.stringify([]));
+                showToast("Semua riwayat pesanan dibersihkan!");
+                refreshAdminStats();
+                renderAdminOrders();
+            }
+        }
+
+
+        // ================= SECTION 2: RENDER PRODUCTS =================
+        function renderAdminProducts() {
+            products = JSON.parse(localStorage.getItem('florist_products') || '[]');
+            const tbody = document.getElementById('admin-product-table-body');
+            
+            if (products.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="p-10 text-center text-florist-light font-medium bg-white">
+                            🌸 Belum ada produk terpasang di katalog lokal.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = products.map(prod => {
+                const rupiah = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(prod.price);
+                return `
+                    <tr class="hover:bg-florist-primary/5 transition-colors">
+                        <td class="p-4">
+                            <div class="flex items-center gap-3">
+                                <img src="${prod.image}" alt="${prod.name}" class="h-11 w-11 object-cover rounded-xl border border-florist-primary/10 flex-shrink-0">
+                                <div>
+                                    <h4 class="font-bold text-florist-dark leading-tight">${prod.name}</h4>
+                                    <p class="text-[10px] text-florist-light mt-0.5 line-clamp-1 max-w-[200px]">${prod.desc}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-4 font-semibold text-stone-600">${prod.category}</td>
+                        <td class="p-4 font-bold text-florist-primary">${rupiah}</td>
+                        <td class="p-4">
+                            ${prod.featured ? `
+                                <span class="bg-florist-primary/15 text-florist-primary text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-florist-primary/10">⭐ Rekomendasi</span>
+                            ` : `
+                                <span class="text-stone-300">-</span>
+                            `}
+                        </td>
+                        <td class="p-4 text-right">
+                            <div class="inline-flex gap-1.5">
+                                <button onclick="openProductModal(${prod.id})" class="btn-interactive bg-stone-50 border border-stone-200 hover:bg-stone-100 text-stone-700 px-2.5 py-1.5 rounded-lg font-bold" title="Ubah Produk">
+                                    ✏️ Edit
+                                </button>
+                                <button onclick="deleteProduct(${prod.id})" class="btn-interactive bg-red-50 border border-red-100 hover:bg-red-100 text-red-600 px-2.5 py-1.5 rounded-lg font-bold" title="Hapus">
+                                    🗑️ Hapus
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Add/Edit Modals logic
+        function openProductModal(prodId = null) {
+            const modal = document.getElementById('product-modal');
+            const title = document.getElementById('modal-title');
+            const form = document.getElementById('product-form');
+            form.reset();
+
+            if (prodId) {
+                // Edit Mode
+                title.innerText = "Ubah Detail Produk Buket";
+                const p = products.find(prod => prod.id === prodId);
+                if (p) {
+                    document.getElementById('edit-product-id').value = p.id;
+                    document.getElementById('modal-name').value = p.name;
+                    document.getElementById('modal-category').value = p.category;
+                    document.getElementById('modal-price').value = p.price;
+                    document.getElementById('modal-desc').value = p.desc;
+                    document.getElementById('modal-image').value = p.image;
+                    document.getElementById('modal-featured').checked = p.featured || false;
+                }
+            } else {
+                // Add Mode
+                title.innerText = "Tambah Varian Buket Baru";
+                document.getElementById('edit-product-id').value = '';
+            }
+
+            // Slide In Modal
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('.transform').classList.remove('scale-95');
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('product-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('.transform').classList.add('scale-95');
+        }
+
+        function pickPresetImg(url) {
+            document.getElementById('modal-image').value = url;
+            showToast("Gambar preset dipilih!");
+        }
+
+        // Save (Add / Update) Action
+        function saveProduct(event) {
+            event.preventDefault();
+            
+            const idVal = document.getElementById('edit-product-id').value;
+            const name = document.getElementById('modal-name').value.trim();
+            const category = document.getElementById('modal-category').value;
+            const price = parseInt(document.getElementById('modal-price').value);
+            const desc = document.getElementById('modal-desc').value.trim();
+            const image = document.getElementById('modal-image').value.trim();
+            const featured = document.getElementById('modal-featured').checked;
+
+            products = JSON.parse(localStorage.getItem('florist_products') || '[]');
+
+            if (idVal) {
+                // Update
+                const idx = products.findIndex(p => p.id === parseInt(idVal));
+                if (idx > -1) {
+                    products[idx] = { id: parseInt(idVal), name, category, price, desc, image, featured };
+                    showToast("Detail buket berhasil diperbarui!");
+                }
+            } else {
+                // Add
+                const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+                products.push({ id: newId, name, category, price, desc, image, featured });
+                showToast("Buket varian baru berhasil dipajang!");
+            }
+
+            localStorage.setItem('florist_products', JSON.stringify(products));
+            closeProductModal();
+            refreshAdminStats();
+            renderAdminProducts();
+        }
+
+        // Delete action
+        function deleteProduct(prodId) {
+            if (confirm("Apakah Anda yakin ingin menghapus varian buket ini dari katalog?")) {
+                products = JSON.parse(localStorage.getItem('florist_products') || '[]');
+                products = products.filter(p => p.id !== prodId);
+                localStorage.setItem('florist_products', JSON.stringify(products));
+                showToast("Varian produk berhasil dihapus!");
+                refreshAdminStats();
+                renderAdminProducts();
+            }
+        }
+
+
+        // ================= SECTION 3: RENDER ANALYTICS =================
+        function renderAnalytics() {
+            orders = JSON.parse(localStorage.getItem('florist_orders') || '[]');
+            products = JSON.parse(localStorage.getItem('florist_products') || '[]');
+
+            // Count orders per category
+            const categoryCounts = {};
+            orders.forEach(o => {
+                const cat = o.productCategory || 'Lain-lain';
+                categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+            });
+
+            // Fallback mock counts if zero orders to make chart pretty
+            const categories = ["Handmade Kawat Bulu", "Snack & Money Tower", "Hampers Premium", "Hantaran Seserahan", "Kalung Uang"];
+            const colors = ["#C87A80", "#D4A373", "#2E2528", "#8C7D80", "#E1B0B5"];
+
+            let totalVal = 0;
+            const data = categories.map((cat, i) => {
+                const realCount = categoryCounts[cat] || 0;
+                totalVal += realCount;
+                return { name: cat, count: realCount, color: colors[i] };
+            });
+
+            // Adjust SVG Dasharrays based on percentage
+            let dashoffset = 0;
+            data.forEach((item, index) => {
+                const percentage = totalVal > 0 ? (item.count / totalVal) * 100 : (100 / categories.length);
+                const circle = document.getElementById(`circle-cat-${index + 1}`);
+                if (circle) {
+                    circle.setAttribute('stroke-dasharray', `${percentage} 100`);
+                    circle.setAttribute('stroke-dashoffset', `-${dashoffset}`);
+                    dashoffset += percentage;
+                }
+            });
+
+            // Legend Container
+            const legendContainer = document.getElementById('chart-legend-container');
+            legendContainer.innerHTML = data.map((item) => `
+                <div class="flex items-center gap-2">
+                    <span class="h-3 w-3 rounded-full flex-shrink-0" style="background-color: ${item.color}"></span>
+                    <span class="text-[10px] font-semibold text-florist-dark truncate leading-tight">${item.name} (${item.count} order)</span>
+                </div>
+            `).join('');
+
+            // Render Activity Log Entries
+            const logContainer = document.getElementById('analytics-activity-logs');
+            if (orders.length === 0) {
+                logContainer.innerHTML = `
+                    <div class="text-center py-8 text-florist-light font-medium text-xs">
+                        😴 Belum ada aktivitas transaksi terekam saat ini.
+                    </div>
+                `;
+                return;
+            }
+
+            logContainer.innerHTML = orders.slice(0, 10).map(ord => {
+                const formattedTime = new Date(ord.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                let actionIcon = "📥";
+                if (ord.status === "Selesai") actionIcon = "✅";
+                if (ord.status === "Batal") actionIcon = "❌";
+
+                return `
+                    <div class="flex gap-3 text-xs items-start bg-stone-50 p-2.5 rounded-xl border border-stone-100">
+                        <span class="text-base select-none">${actionIcon}</span>
+                        <div class="flex-1">
+                            <p class="font-semibold text-florist-dark">${ord.customerName} memesan <span class="text-florist-primary font-bold">${ord.productName}</span></p>
+                            <p class="text-[10px] text-florist-light mt-0.5">Status: <span class="font-bold">${ord.status}</span> &bull; ${formattedTime}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Formatting Helpers
+        function formatDateIndo(dateStr) {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('id-ID', options);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast-notif');
+            document.getElementById('toast-message').innerText = message;
+            
+            toast.classList.remove('opacity-0', 'translate-y-[-100px]', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-[-100px]', 'pointer-events-none');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
