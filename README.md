@@ -1,21 +1,26 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Buket Florist - Premium Mobile Web Catalog
 
-# Run and deploy your AI Studio app
+Aplikasi Katalog Buket Premium (Mobile-First Web App) dengan checkout formulir langsung terintegrasi ke WhatsApp Admin.
 
-This contains everything you need to run your app locally.
+## Fitur Utama
 
-View your app in AI Studio: https://ai.studio/apps/6fc81700-36a1-45a4-af85-9088f3cc2980
+-   **Mobile-First Responsive Design**: Tampilan dirancang khusus agar menyerupai aplikasi native di HP, dengan grid yang dapat menyesuaikan diri secara mulus di tablet dan desktop.
+-   **Katalog Interaktif**: Filter kategori horizontal, tombol pencarian cepat real-time, dan penyimpanan produk "Favorit" berbasis `localStorage` lokal.
+-   **Formulir Pemesanan WhatsApp Mandiri**: Pelanggan dapat memasukkan detail order seperti:
+    -   Nama Pemesan
+    -   Nomor WhatsApp Pemesan (dengan validasi format Indonesia)
+    -   Tanggal Pengiriman (dengan proteksi tanggal masa lampau)
+    -   Pilihan Kertas Wrapping (Blush Pink, Gold, Midnight Black, Rustic, dll)
+    -   Kartu Ucapan Custom (disertai pembatas karakter)
+-   **Generator Pesan WhatsApp**: Otomatis menyusun teks format pemesanan rapi dan mengarahkan langsung ke WhatsApp Admin toko (+62 822-1616-8815) saat disubmit.
 
-## Run Locally
+## Cara Deploy ke Vercel
 
-**Prerequisites:**  [Android Studio](https://developer.android.com/studio)
+Aplikasi ini sudah dikonfigurasi untuk dapat dideploy ke **Vercel** secara instan:
 
-
-1. Open Android Studio
-2. Select **Open** and choose the directory containing this project
-3. Allow Android Studio to fix any incompatibilities as it imports the project.
-4. Create a file named `.env` in the project directory and set `GEMINI_API_KEY` in that file to your Gemini API key (see `.env.example` for an example)
-5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
-6. Run the app on an emulator or physical device
+1.  Simpan seluruh perubahan Anda dan push kode ini ke repositori **GitHub** Anda.
+2.  Masuk ke dashboard [Vercel](https://vercel.com).
+3.  Klik **Add New** -> **Project**.
+4.  Pilih repositori GitHub Anda.
+5.  Vercel akan otomatis mengenali berkas `index.html` di root direktori.
+6.  Klik **Deploy**! Aplikasi Anda akan online dalam beberapa detik tanpa perlu melakukan konfigurasi apa pun.
