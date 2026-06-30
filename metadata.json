@@ -1,0 +1,6 @@
+{
+  "name": "Buket Florist",
+  "description": "Katalog buket profesional dengan WhatsApp checkout dan desain responsif.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
